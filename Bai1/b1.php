@@ -35,17 +35,17 @@
 
 			if (!is_numeric($nba)) {
 				echo "A phải là số <br />";
-				$varc = false;
+				$flags = false;
 			}
 
 			if (!is_numeric($nbb)) {
 				echo "B phải là số <br />";
-				$varc = false;
+				$flags = false;
 			}
 
 			if (!is_numeric($nbc)) {
 				echo "C phải là số <br />";
-				$varc = false;
+				$flags = false;
 			}
 
 			if ($flags) {
