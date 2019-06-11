@@ -5,25 +5,23 @@
 	<title>Giai Phuong Trinh Bac 2</title>
 </head>
 <body>
-
+	
 	<div class="content" style="width: 50%; margin: 20px auto">
 		<form action="b1.php" method="POST" name="ptbh">
 			<div class="form-group">
 				<label for="numbera"> Nhập Số A</label>
-				<input type="text" name="nba" id="numbera" class="form-control">
+				<input type="text" value="<?php if(isset($_POST['nba'])) { echo htmlentities($_POST['nba']);} ?>" name="nba" id="numbera" class="form-control">
 			</div>
 			<div class="form-group">
 				<label for="numberb"> Nhập Số B</label>
-				<input type="text" name="nbb" id="numberb" class="form-control">
+				<input type="text" value="<?php if(isset($_POST['nbb'])) { echo htmlentities($_POST['nbb']);} ?>" name="nbb" id="numberb" class="form-control">
 			</div>
 			<div class="form-group">
 				<label for="numberc"> Nhập Số C</label>
-				<input type="text" name="nbc" id="numberc" class="form-control">
-			</div>
-			
+				<input type="text" value="<?php if(isset($_POST['nbc'])) { echo htmlentities($_POST['nbc']);} ?>" name="nbc" id="numberc" class="form-control">
+			</div>			
 			<button type="submit" class="btn btn-primary">Tính</button>
-		</form>
-	
+		</form>	
 
 	<?php
 
@@ -31,15 +29,9 @@
 
 			$nba = $_POST["nba"];
 			$nbb = $_POST["nbb"];
+			$nbc = ($_POST["nbc"] == "") ? 0 : $_POST["nbc"];
 
-			$nbc = ($_POST["nbc"]) == "" ? 0 : $_POST["nbc"];
-
-			// if (!is_numeric($nba) || !is_numeric($nbb)|| !is_numeric($nbc)) {
-			// 	echo("Yeu cau nhap so");
-			// 	return;
-			// }
-			// 
-			$varc = true;
+			$flags = true;
 
 			if (!is_numeric($nba)) {
 				echo "A phải là số <br />";
@@ -56,15 +48,17 @@
 				$varc = false;
 			}
 
-			
-
-			if ($varc) {
+			if ($flags) {
 				if ($nba == 0) {
-					echo "Phuong trinh có nghiem x = " . (float)-$nbc/$nbb;
+					if ($nbb == 0) {
+						$resVal = ($nbc == 0) ? "Phuong trinh co vo so nghiem" : "Phuong trinh vo nghiem" ;
+						echo $resVal;
+					} else {
+						echo "Phuong trinh có nghiem x = " . (float)-$nbc/$nbb;
+					}
 				} else {
 					echo delta($nba, $nbb, $nbc);
-				}
-				
+				}				
 			}			
 		}
 
@@ -82,7 +76,6 @@
 				$y = (float)($b - sqrt($del))/(2 * $a);
 				$res = "Phuong trinh co 2 nghiem <br />x1 = " . $x . " <br /> x2 = " . $y;
 			}
-
 			return $res;
 		}
 
