@@ -34,10 +34,14 @@
 
 			$nbc = (strlen($_POST["nbc"]) == "") ? 0 : $_POST["nbc"];
 
-			if ($nba != 0 && (is_numeric($nba) && is_numeric($nbb)  && is_numeric($nbc))) {
+			if (!is_numeric($nba) || !is_numeric($nbb)|| !is_numeric($nbc)) {
+				echo("Yeu cau nhap so");
+				return;
+			}
+			if ($nba != 0) {
 				echo delta($nba, $nbb, $nbc);
 			} else {
-				echo("Sai dinh dang!");
+				echo("So A phai khac 0!");
 			}
 		}
 
