@@ -32,17 +32,40 @@
 			$nba = $_POST["nba"];
 			$nbb = $_POST["nbb"];
 
-			$nbc = (strlen($_POST["nbc"]) == "") ? 0 : $_POST["nbc"];
+			$nbc = ($_POST["nbc"]) == "" ? 0 : $_POST["nbc"];
 
-			if (!is_numeric($nba) || !is_numeric($nbb)|| !is_numeric($nbc)) {
-				echo("Yeu cau nhap so");
-				return;
+			// if (!is_numeric($nba) || !is_numeric($nbb)|| !is_numeric($nbc)) {
+			// 	echo("Yeu cau nhap so");
+			// 	return;
+			// }
+			// 
+			$varc = true;
+
+			if (!is_numeric($nba)) {
+				echo "A phải là số <br />";
+				$varc = false;
 			}
-			if ($nba != 0) {
-				echo delta($nba, $nbb, $nbc);
-			} else {
-				echo("So A phai khac 0!");
+
+			if (!is_numeric($nbb)) {
+				echo "B phải là số <br />";
+				$varc = false;
 			}
+
+			if (!is_numeric($nbc)) {
+				echo "C phải là số <br />";
+				$varc = false;
+			}
+
+			
+
+			if ($varc) {
+				if ($nba == 0) {
+					echo "Phuong trinh có nghiem x = " . (float)-$nbc/$nbb;
+				} else {
+					echo delta($nba, $nbb, $nbc);
+				}
+				
+			}			
 		}
 
 		function delta($a, $b, $c) {
@@ -63,9 +86,8 @@
 			return $res;
 		}
 
-
-
 	?>
+
 	</div>
 </body>
 </html>
