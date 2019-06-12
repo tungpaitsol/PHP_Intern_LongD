@@ -26,66 +26,68 @@
 	<?php
 
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
+			$a = $_POST['a'];
+			$b = $_POST['b'];
+			$c = $_POST['c'];
 
-			$a = $_POST["a"];
-			$b = $_POST["b"];
-			$c = $_POST["c"];
+			if($a !== "" || $b !== "" || $c !== "") {
+				
+				$a = $a == "" ? 0 : $a;
+				$b = $b == "" ? 0 : $b;
+				$c = $c == "" ? 0 : $c;
 
-			if (check_err($a, $b, $c)) {
-				if ($a == 0) {
-					if ($b == 0) {
-						$resVal = ($c == 0) ? "Phuong trinh co vo so nghiem" : "Phuong trinh vo nghiem" ;
-						echo $resVal;
+				if (is_numeric($a) && (is_numeric($b) && is_numeric($c))) { 
+					if ($a == 0) {
+						if ($b == 0) {
+							if ($c == 0) {
+								echo "Phuong trinh vo so nghiem";
+							} else {
+								echo "Phuong trinh vo nghiem";
+							}							
+						} else {
+							echo "Phuong trinh co nghiem x = " . (float)(-$c/$b);
+						}
 					} else {
-						echo "Phuong trinh có nghiem x = " . (float)(-$c)/$b;
+						$var = ptbh($a, $b, $c);
+						switch ($var['stt']) {
+							case -1:
+								echo "Phuong trinh vo nghiem";
+								break;
+							case 0:
+								echo "Phuong trinh co nghiem kep x1 = x2 = " .$var['x1'];
+								break;
+							case 1:
+								echo "Phuong trinh co 2 nghiem x1 = " . $var['x1'];
+								echo "Phuong trinh co 2 nghiem x2 = " . $var['x2'];
+								break;							
+							default:
+								# code...
+								break;
+						}
 					}
-				} else {
-					echo delta($a, $b, $c);
-				}				
-			}			
+				}
+			} else {
+				echo "Hay nhap so";
+			}
 		}
 
-		function delta($a, $b, $c) {
-			$del = ($b*$b) - (4*$a*$c);
-			$res = null;
+		function ptbh($a, $b, $c) {
+			$arr = array();
+			$delta = $b*$b - 4*$a*$c;
 
-			if ($del < 0) {
-				$res = "Phuong trinh vo nghiem";
-			} elseif ($del == 0) {
-				$x = (float)(-$b)/(2*$a);
-				$res = "Phuong trinh co nghiem kep: x1 = x2 = " . $x;
-			} elseif ($del > 0) {
-				$x = (float)($b + sqrt($del))/(2 * $a);
-				$y = (float)($b - sqrt($del))/(2 * $a);
-				$res = "Phuong trinh co 2 nghiem <br />x1 = " . $x . " <br /> x2 = " . $y;
+			if ($delta < 0) {
+				$arr = array('stt' => -1, 'x1' => null, 'x2' => null);
+			} elseif ($delta == 0) {
+				$x = (-$b)/(2*$a);
+				$arr = array('stt' => 0, 'x1' => $x, 'x2' => $x);
+			} elseif ($delta > 0) {
+				$x1 = ($b + sqrt($delta))/(2 * $a);
+				$x2 = ($b - sqrt($delta))/(2 * $a);
+				$arr = array('stt' => 0, 'x1' => $x1, 'x2' => $x2);
 			}
-			return $res;
+
+			return $arr;
 		}
-
-		function check_err($a, $b, $c) {
-			$err = "";
-
-			if ($a == "" && $b == "" && $c == "") {
-				echo "Xin hay nhap so <br />";
-				return 0;
-			}
-
-			$a = ($a == "") ? 0 : $a;
-			$b = ($b == "") ? 0 : $b;
-			$c = ($c == "") ? 0 : $c;
-
-			if (!is_numeric($a)) $err .= "A phải là số <br />";
-			if (!is_numeric($b)) $err .= "B phải là số <br />";
-			if (!is_numeric($c)) $err .= "C phải là số <br />";
-
-			if ($err !== "") {
-				echo $err;
-				return 0;
-			}
-
-			return 1;
-		}
-
 	?>
 
 	</div>
