@@ -36,38 +36,39 @@
 				$b = $b == "" ? 0 : $b;
 				$c = $c == "" ? 0 : $c;
 
+				if(!is_numeric($a)) {
+					echo "A phai la so <br />";
+				}
+
+				if(!is_numeric($b)) {
+					echo "B phai la so <br />";
+				}
+
+				if(!is_numeric($c)) {
+					echo "C phai la so <br />";
+				}
+
 				if (is_numeric($a) && (is_numeric($b) && is_numeric($c))) { 
-					if ($a == 0) {
-						if ($b == 0) {
-							if ($c == 0) {
-								echo "Phuong trinh vo so nghiem";
-							} else {
-								echo "Phuong trinh vo nghiem";
-							}							
-						} else {
-							echo "Phuong trinh co nghiem x = " . (float)(-$c/$b);
-						}
-					} else {
-						$var = ptbh($a, $b, $c);
-						switch ($var['stt']) {
-							case -1:
-								echo "Phuong trinh vo nghiem";
-								break;
-							case 0:
-								echo "Phuong trinh co nghiem kep x1 = x2 = " .$var['x1'];
-								break;
-							case 1:
-								echo "Phuong trinh co 2 nghiem x1 = " . $var['x1'];
-								echo "Phuong trinh co 2 nghiem x2 = " . $var['x2'];
-								break;
-							case 2:
-								echo "Phuong trinh co vo so nghiem";
-								break;						
-							default:
-								# code...
-								break;
-						}
+					
+					$var = ptbh($a, $b, $c);
+					switch ($var['stt']) {
+						case -1:
+							echo "Phuong trinh vo nghiem";
+							break;
+						case 0:
+							echo "Phuong trinh co nghiem x1 = x2 = " .$var['x1'];
+							break;
+						case 1:
+							echo "Phuong trinh co 2 nghiem <br />x1 = " . $var['x1']. "<br />x2 = " . $var['x2'];
+							break;
+						case 2:
+							echo "Phuong trinh co vo so nghiem";
+							break;						
+						default:
+						
+							break;
 					}
+					
 				}
 			} else {
 				echo "Hay nhap so";
@@ -86,7 +87,7 @@
 					}							
 				} else {
 					$x = -$c/$b;
-					$arr = array('stt' => 1, 'x1' => $x, 'x2' => $x);
+					$arr = array('stt' => 0, 'x1' => $x, 'x2' => $x);
 				}
 			} else {
 				$delta = $b*$b - 4*$a*$c;
@@ -102,7 +103,7 @@
 					$arr = array('stt' => 0, 'x1' => $x1, 'x2' => $x2);
 				}
 			}
-			
+
 			return $arr;
 		}
 	?>
