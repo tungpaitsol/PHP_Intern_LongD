@@ -23,28 +23,16 @@
 				}
 
 				$n_ipn = $_POST["ipn1"];
-
-				$arr1 = explode(',', $n_ipn);
-				foreach ($arr1 as $var1) {
-					$arr2 = explode('-', $var1);					
-
-					if(count($arr2) !== 2) {
-						echo "Sai dinh dang";
-						die();
+				$arr_data = xdata($n_ipn);
+				if ($arr_data !== 0) {
+					foreach ($arr_data as $value) {
+						echo($value . "<br />");
 					}
-
-					echo "<br />";
-					if (is_numeric($arr2[0]) && is_numeric($arr2[1]) && ($arr2[0] <= $arr2[1])) {
-						echo $arr2[0] ."-". $arr2[1] . "|";
-						for ($i=$arr2[0]; $i <= $arr2[1]; $i++) { 
-							if (soNguyenTo($i)) {
-								echo " " .soNguyenTo($i);
-							}
-						}
-					} else {
-						echo("Sai dinh dang!");
-					}
-				}				
+				} else {
+					echo("Sai dinh dang");
+				}
+				
+							
 			}
 
 			function soNguyenTo($var) {
@@ -59,6 +47,32 @@
 			  	return $var;
 			}
 			
+			function xdata($value) {
+				$arr1 = explode(',', $value);
+				$c = count($arr1);
+				$arr_output[$c] = "";
+				foreach ($arr1 as $key1 => $var1) {
+					$arr2 = explode('-', $var1);				
+					$temp = $var1;
+
+					if(count($arr2) !== 2) {
+						return 0;
+					}
+
+					if (is_numeric($arr2[0]) && is_numeric($arr2[1]) && ($arr2[0] <= $arr2[1])) {
+						//echo $arr2[0] ."-". $arr2[1] . "|";
+						for ($i=$arr2[0]; $i <= $arr2[1]; $i++) {
+							if (soNguyenTo($i)) {
+								$temp = $temp . " " .soNguyenTo($i);
+							}
+						}
+						$arr_output[$key1] = $temp;
+					} else {
+						return 0;
+					}
+				}
+				return $arr_output;
+			}
 		?>
 	</div>
 	
