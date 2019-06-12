@@ -17,8 +17,8 @@
 		<?php
 			if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
-				if (empty($_POST["ipn1"])) {
-					echo "Sai dinh dang";
+				if (!isset($_POST["ipn1"])) {
+					echo "Bạn chưa nhập";
 					die();
 				}
 
