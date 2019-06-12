@@ -24,7 +24,7 @@
 
 				$ipn = $_POST["input1"];
 				$arr_data = xdata($ipn);
-				if ($arr_data !== 0) {
+				if (is_array($arr_data)) {
 					foreach ($arr_data as $key => $value) {
 						echo($key . " | " . $value . "<br />");
 					}
