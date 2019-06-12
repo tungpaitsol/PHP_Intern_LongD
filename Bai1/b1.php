@@ -56,7 +56,7 @@
 							echo "Phuong trinh vo nghiem";
 							break;
 						case 0:
-							echo "Phuong trinh co nghiem x1 = x2 = " .$var['x1'];
+							echo "Phuong trinh co nghiem x = " .$var['x1'];
 							break;
 						case 1:
 							echo "Phuong trinh co 2 nghiem <br />x1 = " . $var['x1']. "<br />x2 = " . $var['x2'];
