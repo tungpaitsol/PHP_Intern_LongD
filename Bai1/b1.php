@@ -56,8 +56,8 @@
 			if ($del < 0) {
 				$res = "Phuong trinh vo nghiem";
 			} elseif ($del == 0) {
-				$x = (float)$b/(2*$a);
-				$res = "Phuong trinh co nghiem kep: x1 = x2 = " . (-$x);
+				$x = (float)(-$b)/(2*$a);
+				$res = "Phuong trinh co nghiem kep: x1 = x2 = " . $x;
 			} elseif ($del > 0) {
 				$x = (float)($b + sqrt($del))/(2 * $a);
 				$y = (float)($b - sqrt($del))/(2 * $a);
