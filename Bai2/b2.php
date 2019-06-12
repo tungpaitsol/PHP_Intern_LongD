@@ -52,7 +52,7 @@
 					return 0;
 				}
 
-			    for($i = 2; $i < sqrt($var); $i++)  
+			    for($i = 2; $i <= sqrt($var); $i++)  
 			   	{  
 					if($var % $i == 0) return 0;
 			   	}
