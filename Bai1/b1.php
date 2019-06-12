@@ -10,15 +10,15 @@
 		<form action="b1.php" method="POST" name="ptbh">
 			<div class="form-group">
 				<label for="numbera"> Nhập Số A</label>
-				<input type="text" value="<?php if(isset($_POST['nba'])) { echo htmlentities($_POST['nba']);} ?>" name="nba" id="numbera" class="form-control">
+				<input type="text" value="<?php if(isset($_POST['a'])) { echo htmlentities($_POST['a']);} ?>" name="a" id="numbera" class="form-control">
 			</div>
 			<div class="form-group">
 				<label for="numberb"> Nhập Số B</label>
-				<input type="text" value="<?php if(isset($_POST['nbb'])) { echo htmlentities($_POST['nbb']);} ?>" name="nbb" id="numberb" class="form-control">
+				<input type="text" value="<?php if(isset($_POST['b'])) { echo htmlentities($_POST['b']);} ?>" name="b" id="numberb" class="form-control">
 			</div>
 			<div class="form-group">
 				<label for="numberc"> Nhập Số C</label>
-				<input type="text" value="<?php if(isset($_POST['nbc'])) { echo htmlentities($_POST['nbc']);} ?>" name="nbc" id="numberc" class="form-control">
+				<input type="text" value="<?php if(isset($_POST['c'])) { echo htmlentities($_POST['c']);} ?>" name="c" id="numberc" class="form-control">
 			</div>			
 			<button type="submit" class="btn btn-primary">Tính</button>
 		</form>	
@@ -27,37 +27,43 @@
 
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-			$nba = $_POST["nba"];
-			$nbb = $_POST["nbb"];
-			$nbc = ($_POST["nbc"] == "") ? 0 : $_POST["nbc"];
+			$a = $_POST["a"];
+			$b = $_POST["b"];
+			$c = ($_POST["c"] == "") ? 0 : $_POST["c"];
 
 			$flags = true;
 
-			if (!is_numeric($nba)) {
+			if ($a == "") {
+				echo "Chưa nhập A <br />";
+				$flags = false;
+			} elseif (!is_numeric($a)) {
 				echo "A phải là số <br />";
 				$flags = false;
 			}
 
-			if (!is_numeric($nbb)) {
+			if ($b == "") {
+				echo "Chưa nhập B <br />";
+				$flags = false;
+			} elseif (!is_numeric($b)) {
 				echo "B phải là số <br />";
 				$flags = false;
 			}
 
-			if (!is_numeric($nbc)) {
+			if (!is_numeric($c)) {
 				echo "C phải là số <br />";
 				$flags = false;
 			}
 
 			if ($flags) {
-				if ($nba == 0) {
-					if ($nbb == 0) {
-						$resVal = ($nbc == 0) ? "Phuong trinh co vo so nghiem" : "Phuong trinh vo nghiem" ;
+				if ($a == 0) {
+					if ($b == 0) {
+						$resVal = ($c == 0) ? "Phuong trinh co vo so nghiem" : "Phuong trinh vo nghiem" ;
 						echo $resVal;
 					} else {
-						echo "Phuong trinh có nghiem x = " . (float)-$nbc/$nbb;
+						echo "Phuong trinh có nghiem x = " . (float)(-$c)/$b;
 					}
 				} else {
-					echo delta($nba, $nbb, $nbc);
+					echo delta($a, $b, $c);
 				}				
 			}			
 		}
@@ -70,7 +76,7 @@
 				$res = "Phuong trinh vo nghiem";
 			} elseif ($del == 0) {
 				$x = (float)$b/(2*$a);
-				$res = "Phuong trinh co nghiem kep: x1 = x2 = " . -$x;
+				$res = "Phuong trinh co nghiem kep: x1 = x2 = " . (-$x);
 			} elseif ($del > 0) {
 				$x = (float)($b + sqrt($del))/(2 * $a);
 				$y = (float)($b - sqrt($del))/(2 * $a);
