@@ -27,34 +27,11 @@
 
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-			$a = $_POST["a"];
-			$b = $_POST["b"];
+			$a = ($_POST["a"] == "") ? 0 : $_POST["a"];
+			$b = ($_POST["b"] == "") ? 0 : $_POST["b"];
 			$c = ($_POST["c"] == "") ? 0 : $_POST["c"];
 
-			$flags = true;
-
-			if ($a == "") {
-				echo "Chưa nhập A <br />";
-				$flags = false;
-			} elseif (!is_numeric($a)) {
-				echo "A phải là số <br />";
-				$flags = false;
-			}
-
-			if ($b == "") {
-				echo "Chưa nhập B <br />";
-				$flags = false;
-			} elseif (!is_numeric($b)) {
-				echo "B phải là số <br />";
-				$flags = false;
-			}
-
-			if (!is_numeric($c)) {
-				echo "C phải là số <br />";
-				$flags = false;
-			}
-
-			if ($flags) {
+			if (check_err($a, $b, $c)) {
 				if ($a == 0) {
 					if ($b == 0) {
 						$resVal = ($c == 0) ? "Phuong trinh co vo so nghiem" : "Phuong trinh vo nghiem" ;
@@ -69,6 +46,10 @@
 		}
 
 		function delta($a, $b, $c) {
+			$a = $a ?? 0;
+			$b = $b ?? 0;
+			$c = $c ?? 0;
+
 			$del = ($b*$b) - (4*$a*$c);
 			$res = null;
 
@@ -83,6 +64,26 @@
 				$res = "Phuong trinh co 2 nghiem <br />x1 = " . $x . " <br /> x2 = " . $y;
 			}
 			return $res;
+		}
+
+		function check_err($a, $b, $c) {
+			$err = "";
+
+			if ($a == "" && $b == "" && $c == "") {
+				echo "Xin hay nhap so <br />";
+				return 0;
+			}
+
+			if (!is_numeric($a)) $err = $err . "A phải là số <br />";
+			if (!is_numeric($b)) $err = $err . "B phải là số <br />";
+			if (!is_numeric($c)) $err = $err . "C phải là số <br />";
+
+			if ($err !== "") {
+				echo $err;
+				return 0;
+			}
+
+			return 1;
 		}
 
 	?>
