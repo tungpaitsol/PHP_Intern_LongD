@@ -46,10 +46,6 @@
 		}
 
 		function delta($a, $b, $c) {
-			$a = $a ?? 0;
-			$b = $b ?? 0;
-			$c = $c ?? 0;
-
 			$del = ($b*$b) - (4*$a*$c);
 			$res = null;
 
