@@ -27,9 +27,9 @@
 
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-			$a = ($_POST["a"] == "") ? 0 : $_POST["a"];
-			$b = ($_POST["b"] == "") ? 0 : $_POST["b"];
-			$c = ($_POST["c"] == "") ? 0 : $_POST["c"];
+			$a = $_POST["a"];
+			$b = $_POST["b"];
+			$c = $_POST["c"];
 
 			if (check_err($a, $b, $c)) {
 				if ($a == 0) {
