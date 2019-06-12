@@ -59,7 +59,10 @@
 							case 1:
 								echo "Phuong trinh co 2 nghiem x1 = " . $var['x1'];
 								echo "Phuong trinh co 2 nghiem x2 = " . $var['x2'];
-								break;							
+								break;
+							case 2:
+								echo "Phuong trinh co vo so nghiem";
+								break;						
 							default:
 								# code...
 								break;
@@ -73,19 +76,33 @@
 
 		function ptbh($a, $b, $c) {
 			$arr = array();
-			$delta = $b*$b - 4*$a*$c;
 
-			if ($delta < 0) {
-				$arr = array('stt' => -1, 'x1' => null, 'x2' => null);
-			} elseif ($delta == 0) {
-				$x = (-$b)/(2*$a);
-				$arr = array('stt' => 0, 'x1' => $x, 'x2' => $x);
-			} elseif ($delta > 0) {
-				$x1 = ($b + sqrt($delta))/(2 * $a);
-				$x2 = ($b - sqrt($delta))/(2 * $a);
-				$arr = array('stt' => 0, 'x1' => $x1, 'x2' => $x2);
+			if ($a == 0) {
+				if ($b == 0) {
+					if ($c == 0) {
+						$arr = array('stt' => 2, 'x1' => null, 'x2' => null);
+					} else {
+						$arr = array('stt' => -1, 'x1' => null, 'x2' => null);
+					}							
+				} else {
+					$x = -$c/$b;
+					$arr = array('stt' => 1, 'x1' => $x, 'x2' => $x);
+				}
+			} else {
+				$delta = $b*$b - 4*$a*$c;
+
+				if ($delta < 0) {
+					$arr = array('stt' => -1, 'x1' => null, 'x2' => null);
+				} elseif ($delta == 0) {
+					$x = (-$b)/(2*$a);
+					$arr = array('stt' => 0, 'x1' => $x, 'x2' => $x);
+				} elseif ($delta > 0) {
+					$x1 = ($b + sqrt($delta))/(2 * $a);
+					$x2 = ($b - sqrt($delta))/(2 * $a);
+					$arr = array('stt' => 0, 'x1' => $x1, 'x2' => $x2);
+				}
 			}
-
+			
 			return $arr;
 		}
 	?>
