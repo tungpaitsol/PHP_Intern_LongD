@@ -25,8 +25,8 @@
 				$ipn = $_POST["input1"];
 				$arr_data = xdata($ipn);
 				if ($arr_data !== 0) {
-					foreach ($arr_data as $value) {
-						echo($value . "<br />");
+					foreach ($arr_data as $key => $value) {
+						echo($key . " | " . $value . "<br />");
 					}
 				} else {
 					echo("Sai dinh dang");
@@ -47,23 +47,24 @@
 			
 			function xdata($value) {
 				$arr1 = explode(',', $value);
-				$c = count($arr1);
-				$arr_output[$c] = "";
-
+				$arr_output = array();
+				
 				foreach ($arr1 as $key1 => $var1) {
-					$arr2 = explode('-', $var1);				
-					$temp = $var1;
+					$arr2 = explode('-', $var1);
+					$temp = null;
 
 					if(count($arr2) !== 2) return 0;
 					if (!is_numeric($arr2[0]) || !is_numeric($arr2[1]) || ($arr2[0] > $arr2[1])) return 0;
 
 					for ($i=$arr2[0]; $i <= $arr2[1]; $i++) {
 						if (soNguyenTo($i)) {
-							$temp = $temp . " " .soNguyenTo($i);
+							$temp .= soNguyenTo($i) . " ";
 						}
 					}
-					$arr_output[$key1] = $temp;
+					$arr_temp = array($var1 => $temp);
+					$arr_output += $arr_temp;
 				}
+				
 				return $arr_output;
 			}
 		?>
