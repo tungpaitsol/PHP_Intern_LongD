@@ -76,9 +76,6 @@
 		}
 		
 		function ptbh($a, $b, $c) {
-			$arr = array();
-
-
 			if ($a == 0 && $b == 0 && $c == 0) {
 				return array('stt' => 2, 'x1' => null, 'x2' => null);
 			}
