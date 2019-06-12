@@ -75,6 +75,14 @@
 			}
 		}
 		
+		/**
+		 * ptbh
+		 *
+		 * @param [number] $a
+		 * @param [number] $b
+		 * @param [number] $c
+		 * @return array
+		 */
 		function ptbh($a, $b, $c) {
 			
 			if ($a == 0 && $b == 0 && $c == 0) {
