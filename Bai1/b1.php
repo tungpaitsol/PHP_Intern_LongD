@@ -70,9 +70,13 @@
 				return 0;
 			}
 
-			if (!is_numeric($a)) $err = $err . "A phải là số <br />";
-			if (!is_numeric($b)) $err = $err . "B phải là số <br />";
-			if (!is_numeric($c)) $err = $err . "C phải là số <br />";
+			$a = ($a == "") ? 0 : $a;
+			$b = ($b == "") ? 0 : $b;
+			$c = ($c == "") ? 0 : $c;
+
+			if (!is_numeric($a)) $err .= "A phải là số <br />";
+			if (!is_numeric($b)) $err .= "B phải là số <br />";
+			if (!is_numeric($c)) $err .= "C phải là số <br />";
 
 			if ($err !== "") {
 				echo $err;
