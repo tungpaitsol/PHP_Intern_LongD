@@ -74,37 +74,35 @@
 				echo "Hay nhap so";
 			}
 		}
-
+		
 		function ptbh($a, $b, $c) {
 			$arr = array();
 
-			if ($a == 0) {
-				if ($b == 0) {
-					if ($c == 0) {
-						$arr = array('stt' => 2, 'x1' => null, 'x2' => null);
-					} else {
-						$arr = array('stt' => -1, 'x1' => null, 'x2' => null);
-					}							
-				} else {
-					$x = -$c/$b;
-					$arr = array('stt' => 0, 'x1' => $x, 'x2' => $x);
-				}
-			} else {
-				$delta = $b*$b - 4*$a*$c;
 
-				if ($delta < 0) {
-					$arr = array('stt' => -1, 'x1' => null, 'x2' => null);
-				} elseif ($delta == 0) {
-					$x = (-$b)/(2*$a);
-					$arr = array('stt' => 0, 'x1' => $x, 'x2' => $x);
-				} elseif ($delta > 0) {
-					$x1 = ($b + sqrt($delta))/(2 * $a);
-					$x2 = ($b - sqrt($delta))/(2 * $a);
-					$arr = array('stt' => 0, 'x1' => $x1, 'x2' => $x2);
-				}
+			if ($a == 0 && $b == 0 && $c == 0) {
+				return array('stt' => 2, 'x1' => null, 'x2' => null);
 			}
 
-			return $arr;
+			if ($a == 0 && $b == 0 && $c !== 0) {
+				return array('stt' => -1, 'x1' => null, 'x2' => null);
+			}
+
+			if ($a == 0 && $b !== 0 ) {
+				$x = -$c/$b;
+				return array('stt' => 0, 'x1' => $x, 'x2' => $x);
+			}
+
+			$delta = $b*$b - 4*$a*$c;
+			if ($delta < 0) {
+				return array('stt' => -1, 'x1' => null, 'x2' => null);
+			} elseif ($delta == 0) {
+				$x = (-$b)/(2*$a);
+				return array('stt' => 0, 'x1' => $x, 'x2' => $x);
+			} else {
+				$x1 = ($b + sqrt($delta))/(2 * $a);
+				$x2 = ($b - sqrt($delta))/(2 * $a);
+				return array('stt' => 0, 'x1' => $x1, 'x2' => $x2);
+			}
 		}
 	?>
 
