@@ -23,12 +23,16 @@
 				}
 
 				$ipn = $_POST["input1"];
-				$arr_data = xdata($ipn);
-				if (is_array($arr_data)) {
+				$arr_data = check_data($ipn, ",", "-");
+				$arr_snt = find_snt($arr_data);
+
+				if (!empty($arr_data) && !empty($arr_snt)) {
 					echo "So nguyen to can tim: ";
-					foreach ($arr_data as $value) {
+					foreach ($arr_snt as $value) {
 						echo($value. " ");
 					}
+				} elseif (!empty($arr_data) && empty($arr_snt)) {
+					echo "Khong tim thay so nguyen to trong khoang";
 				} else {
 					echo("Sai dinh dang");
 				}
@@ -44,25 +48,35 @@
 					if($var % $i == 0) return 0;
 			   	}
 			  	return $var;
-			}
+			}			
 			
-			function xdata($value) {
-				$arr1 = explode(',', $value);
+			function check_data($value, $sym1, $sym2) {
+				$arr1 = explode($sym1, $value);
 				$arr_output = array();
 				
 				foreach ($arr1 as $key1 => $var1) {
-					$arr2 = explode('-', $var1);
+					$arr2 = explode($sym2, $var1);
 
-					if(count($arr2) !== 2) return 0;
-					if (!is_numeric($arr2[0]) || !is_numeric($arr2[1]) || ($arr2[0] > $arr2[1])) return 0;
+					if(count($arr2) !== 2) return $arr_output;
+					if (!is_numeric($arr2[0]) || !is_numeric($arr2[1]) || ($arr2[0] > $arr2[1])) return $arr_output;
 
-					for ($i=$arr2[0]; $i <= $arr2[1]; $i++) {
+					array_push($arr_output, $arr2);
+				}
+				
+				return $arr_output;
+			}
+
+			function find_snt($arr) {
+				$arr_output = array();
+
+				foreach ($arr as $var) {
+					for ($i=$var[0]; $i <= $var[1]; $i++) {
 						if (soNguyenTo($i)) {
-							array_push($arr_output, soNguyenTo($i)); 
+							array_push($arr_output, soNguyenTo($i));
 						}
 					}
 				}
-				
+
 				return $arr_output;
 			}
 		?>
