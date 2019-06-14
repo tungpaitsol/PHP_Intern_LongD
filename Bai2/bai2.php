@@ -9,63 +9,91 @@
 		<form action="b2.php" method="POST" name="baitap2">
 			<div class="form-group">
 				<label for="input">Nhap khoang so</label>
-		    	<input type="text" value="<?php if(isset($_POST['input1'])) { echo htmlentities($_POST['input1']); } ?>" name="input1" class="form-control" id="input">
+		    	<input type="text" value="<?php if(isset($_POST['inputScope'])) { echo htmlentities($_POST['inputScope']); } ?>" name="inputScope" class="form-control" id="input">
 		  	</div>
-		  	<button type="submit" class="btn btn-primary">Check</button>
+		  	<input type="submit" name="findSNT" value="Tìm" class="btn btn-primary">
 		</form>
-
+		<br />
 		<?php
-			if ($_SERVER["REQUEST_METHOD"] == "POST"){
+			if (isset($_POST['findSNT'])){
 
-				if ($_POST["input1"] == "") {
+				if (!isset($_POST['inputScope']) || $_POST['inputScope'] == '') {
 					echo "Bạn chưa nhập";
-					die();
+					return;
 				}
 
-				$ipn = $_POST["input1"];
-				$arr_data = xdata($ipn);
-				if ($arr_data !== 0) {
-					foreach ($arr_data as $value) {
-						echo($value . "<br />");
-					}
-				} else {
+				$scope = $_POST['inputScope'];
+				$arr_data = check_data($scope, ",", "-");
+				if (empty($arr_data)) {
 					echo("Sai dinh dang");
+					return;
+				}
+
+				$arr_snt = find_snt($arr_data);
+				if (!empty($arr_snt)) {
+					echo "So nguyen to can tim: ";
+					print_arr($arr_snt);
+				} else {
+					echo "Khong tim thay so nguyen to trong khoang";				
 				}
 			}
 
-			function soNguyenTo($var) {
+			function soNguyenTo($var):bool 
+			{
 				if ($var < 2) {
-					return 0;
+					return false;
 				}
 
-			    for($i = 2; $i <= sqrt($var); $i++)  
+			    for($i = 2; $i <= sqrt($var); $i++)
 			   	{  
-					if($var % $i == 0) return 0;
+					if($var % $i == 0) return false;
 			   	}
-			  	return $var;
-			}
+			  	return true;
+			}			
 			
-			function xdata($value) {
-				$arr1 = explode(',', $value);
-				$c = count($arr1);
-				$arr_output[$c] = "";
-
+			function check_data($value, $sym1, $sym2):array 
+			{
+				$arr1 = explode($sym1, $value);
+				$arr_output = array();
+				
 				foreach ($arr1 as $key1 => $var1) {
-					$arr2 = explode('-', $var1);				
-					$temp = $var1;
+					$arr2 = explode($sym2, $var1);
 
-					if(count($arr2) !== 2) return 0;
-					if (!is_numeric($arr2[0]) || !is_numeric($arr2[1]) || ($arr2[0] > $arr2[1])) return 0;
+					if(count($arr2) !== 2) return $arr_output;
+					if (!is_numeric($arr2[0]) || !is_numeric($arr2[1]) || ($arr2[0] > $arr2[1])) 
+						return $arr_output;
 
-					for ($i=$arr2[0]; $i <= $arr2[1]; $i++) {
-						if (soNguyenTo($i)) {
-							$temp = $temp . " " .soNguyenTo($i);
-						}
-					}
-					$arr_output[$key1] = $temp;
+					$arr2[0] = ceil($arr2[0]);
+					$arr2[1] = floor($arr2[1]);
+					array_push($arr_output, $arr2);
 				}
+				
 				return $arr_output;
 			}
+
+			function find_snt($arr):array 
+			{
+				$arr_output = array();
+
+				foreach ($arr as $var) {
+					for ($i=$var[0]; $i <= $var[1]; $i++) {
+						if (soNguyenTo($i) && !in_array($i, $arr_output)) {
+							array_push($arr_output, $i);
+						}
+					}
+				}
+
+				return $arr_output;
+			}
+
+			function print_arr($arr) 
+			{
+				sort($arr);				
+				foreach ($arr as $value) {
+					echo($value. " ");
+				}
+			}
+
 		?>
 	</div>
 	
