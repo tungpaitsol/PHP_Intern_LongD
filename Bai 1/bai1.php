@@ -35,7 +35,7 @@
 				foreach ($get_err as $err) {
 					echo $err. "<br />";
 				}
-				die();
+				return;
 			}
 				
 			$get_ptbh = ptbh($a, $b, $c);
@@ -49,9 +49,9 @@
 				case 1:
 					echo "Phuong trinh co 2 nghiem <br />x1 = " . $get_ptbh['x1']. "<br />x2 = " . $get_ptbh['x2'];
 					break;
-				case 2:
-					echo "Phuong trinh co vo so nghiem";
-					break;						
+				// case 2:
+				// 	echo "Phuong trinh co vo so nghiem";
+				// 	break;						
 				default:				
 					break;
 			}
@@ -84,9 +84,9 @@
 		
 		function ptbh($a, $b, $c) {
 			
-			if ($a == 0 && $b == 0 && $c == 0) {
-				return arr_fmt(2);
-			}
+			// if ($a == 0 && $b == 0 && $c == 0) {
+			// 	return arr_fmt(2);
+			// }
 
 			if ($a == 0 && $b == 0 && $c !== 0) {
 				return arr_fmt(-1);
