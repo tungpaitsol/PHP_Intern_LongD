@@ -20,59 +20,66 @@
 				<label for="numberc"> Nhập Số C</label>
 				<input type="text" value="<?php if(isset($_POST['c'])) { echo htmlentities($_POST['c']);} ?>" name="c" id="numberc" class="form-control">
 			</div>			
-			<button type="submit" class="btn btn-primary">Tính</button>
+			<input type="submit" name="btnCal" value="Tính" class="btn btn-primary">
 		</form>	
-
+		<br />
 	<?php
 
-		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-			$a = $_POST['a'];
-			$b = $_POST['b'];
-			$c = $_POST['c'];
+		if (isset($_POST['btnCal'])) {
+			$a = $_POST['a'] == "" ? 0 : $_POST['a'];
+			$b = $_POST['b'] == "" ? 0 : $_POST['b'];
+			$c = $_POST['c'] == "" ? 0 : $_POST['c'];
 
-			if($a !== "" || $b !== "" || $c !== "") {
-				
-				$a = $a == "" ? 0 : $a;
-				$b = $b == "" ? 0 : $b;
-				$c = $c == "" ? 0 : $c;
-
-				if(!is_numeric($a)) {
-					echo "A phai la so <br />";
+			$get_err = check_err($a, $b, $c);
+			if (!empty($get_err)) {
+				foreach ($get_err as $err) {
+					echo $err. "<br />";
 				}
-
-				if(!is_numeric($b)) {
-					echo "B phai la so <br />";
-				}
-
-				if(!is_numeric($c)) {
-					echo "C phai la so <br />";
-				}
-
-				if (is_numeric($a) && (is_numeric($b) && is_numeric($c))) { 
-					
-					$var = ptbh($a, $b, $c);
-					switch ($var['stt']) {
-						case -1:
-							echo "Phuong trinh vo nghiem";
-							break;
-						case 0:
-							echo "Phuong trinh co nghiem x = " .$var['x1'];
-							break;
-						case 1:
-							echo "Phuong trinh co 2 nghiem <br />x1 = " . $var['x1']. "<br />x2 = " . $var['x2'];
-							break;
-						case 2:
-							echo "Phuong trinh co vo so nghiem";
-							break;						
-						default:
-						
-							break;
-					}
-					
-				}
-			} else {
-				echo "Hay nhap so";
+				die();
 			}
+				
+			$get_ptbh = ptbh($a, $b, $c);
+			switch ($get_ptbh['stt']) {
+				case -1:
+					echo "Phuong trinh vo nghiem";
+					break;
+				case 0:
+					echo "Phuong trinh co nghiem x = " .$get_ptbh['x1'];
+					break;
+				case 1:
+					echo "Phuong trinh co 2 nghiem <br />x1 = " . $get_ptbh['x1']. "<br />x2 = " . $get_ptbh['x2'];
+					break;
+				case 2:
+					echo "Phuong trinh co vo so nghiem";
+					break;						
+				default:				
+					break;
+			}
+				
+			
+		}
+
+		function check_err($a, $b, $c): array {
+			$err = array();
+			if(empty($a) && empty($b) && empty($c)) {
+				array_push($err, "Yeu cau nhap so");
+				return $err;
+			}
+
+			if(!is_numeric($a)) {
+				array_push($err, "A phai la so");
+			}
+
+			if(!is_numeric($b)) {
+				array_push($err, "B phai la so");
+			}
+
+			if(!is_numeric($c)) {
+				array_push($err, "C phai la so");
+			}
+
+			return $err;
+
 		}
 		
 		function ptbh($a, $b, $c) {
