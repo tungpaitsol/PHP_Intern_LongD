@@ -58,7 +58,7 @@
 				if (empty($split_scope)) {
 					return array();
 				}
-				
+
 				$scope_output = array();
 				
 				foreach ($split_scope as $child_scope) {
@@ -79,7 +79,6 @@
 			function findSNT($scope):array 
 			{
 				$snt_array = array();
-				$scope_temp = array(0, 0); 
 				foreach ($scope as $child_scope) {
 					for ($i=$child_scope[0]; $i <= $child_scope[1]; $i++) {
 						if (!soNguyenTo($i) || in_array($i, $snt_array)) continue;
