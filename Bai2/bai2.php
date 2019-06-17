@@ -55,14 +55,18 @@
 			function checkScope($scope, $sym1, $sym2):array 
 			{
 				$split_scope = explode($sym1, $scope);
+				if (empty($split_scope)) {
+					return array();
+				}
+
 				$scope_output = array();
 				
 				foreach ($split_scope as $child_scope) {
 					$child_scope = explode($sym2, $child_scope);
 
-					if(count($child_scope) !== 2) return $scope_output;
-					if (!is_numeric($child_scope[0]) || !is_numeric($child_scope[1]) || ($child_scope[0] > $child_scope[1])) 
-						return $scope_output;
+					if(count($child_scope) !== 2) return array();
+					if (!is_numeric($child_scope[0]) || !is_numeric($child_scope[1]) || ($child_scope[0] > $child_scope[1]))
+						return array();
 
 					$child_scope[0] = (int)ceil($child_scope[0]);
 					$child_scope[1] = (int)floor($child_scope[1]);
