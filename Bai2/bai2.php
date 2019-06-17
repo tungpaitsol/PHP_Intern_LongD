@@ -23,75 +23,72 @@
 				}
 
 				$scope = $_POST['inputScope'];
-				$arr_data = check_data($scope, ",", "-");
-				if (empty($arr_data)) {
+				$get_scope = checkScope($scope, ",", "-");
+				if (empty($get_scope)) {
 					echo("Sai dinh dang");
 					return;
 				}
 
-				$arr_snt = find_snt($arr_data);
-				if (!empty($arr_snt)) {
-					echo "So nguyen to can tim: ";
-					print_arr($arr_snt);
-				} else {
-					echo "Khong tim thay so nguyen to trong khoang";				
+				$get_snt = findSNT($get_scope);
+				if (empty($get_snt)) {
+					echo "Khong tim thay so nguyen to trong khoang";
+					return;
 				}
+
+				echo "So nguyen to can tim: ";
+				echo implode(" ", $get_snt);
 			}
 
-			function soNguyenTo($var):bool 
+			function soNguyenTo($number):bool
 			{
-				if ($var < 2) {
+				if ($number < 2) {
 					return false;
 				}
 
-			    for($i = 2; $i <= sqrt($var); $i++)
+			    for($i = 2; $i <= sqrt($number); $i++)
 			   	{  
-					if($var % $i == 0) return false;
+					if($number % $i == 0) return false;
 			   	}
 			  	return true;
 			}			
 			
-			function check_data($value, $sym1, $sym2):array 
+			function checkScope($scope, $sym1, $sym2):array 
 			{
-				$arr1 = explode($sym1, $value);
-				$arr_output = array();
-				
-				foreach ($arr1 as $key1 => $var1) {
-					$arr2 = explode($sym2, $var1);
-
-					if(count($arr2) !== 2) return $arr_output;
-					if (!is_numeric($arr2[0]) || !is_numeric($arr2[1]) || ($arr2[0] > $arr2[1])) 
-						return $arr_output;
-
-					$arr2[0] = ceil($arr2[0]);
-					$arr2[1] = floor($arr2[1]);
-					array_push($arr_output, $arr2);
+				$split_scope = explode($sym1, $scope);
+				if (empty($split_scope)) {
+					return array();
 				}
 				
-				return $arr_output;
+				$scope_output = array();
+				
+				foreach ($split_scope as $child_scope) {
+					$child_scope = explode($sym2, $child_scope);
+
+					if(count($child_scope) !== 2) return array();
+					if (!is_numeric($child_scope[0]) || !is_numeric($child_scope[1]) || ($child_scope[0] > $child_scope[1]))
+						return array();
+
+					$child_scope[0] = (int)ceil($child_scope[0]);
+					$child_scope[1] = (int)floor($child_scope[1]);
+					array_push($scope_output, $child_scope);
+				}
+				
+				return $scope_output;
 			}
 
-			function find_snt($arr):array 
+			function findSNT($scope):array 
 			{
-				$arr_output = array();
-
-				foreach ($arr as $var) {
-					for ($i=$var[0]; $i <= $var[1]; $i++) {
-						if (soNguyenTo($i) && !in_array($i, $arr_output)) {
-							array_push($arr_output, $i);
-						}
+				$snt_array = array();
+				$scope_temp = array(0, 0); 
+				foreach ($scope as $child_scope) {
+					for ($i=$child_scope[0]; $i <= $child_scope[1]; $i++) {
+						if (!soNguyenTo($i) || in_array($i, $snt_array)) continue;
+						array_push($snt_array, $i);					
 					}
 				}
 
-				return $arr_output;
-			}
-
-			function print_arr($arr) 
-			{
-				sort($arr);				
-				foreach ($arr as $value) {
-					echo($value. " ");
-				}
+				sort($snt_array);
+				return $snt_array;
 			}
 
 		?>
