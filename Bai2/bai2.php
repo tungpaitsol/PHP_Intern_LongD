@@ -30,12 +30,13 @@
 				}
 
 				$arr_snt = find_snt($arr_data);
-				if (!empty($arr_snt)) {
-					echo "So nguyen to can tim: ";
-					print_arr($arr_snt);
-				} else {
-					echo "Khong tim thay so nguyen to trong khoang";				
+				if (empty($arr_snt)) {
+					echo "Khong tim thay so nguyen to trong khoang";
+					return;
 				}
+
+				echo "So nguyen to can tim: ";
+				print_arr($arr_snt);
 			}
 
 			function soNguyenTo($var):bool 
