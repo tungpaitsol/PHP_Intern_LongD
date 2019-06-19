@@ -21,15 +21,16 @@
 			  	<input type="submit" name="bntDivide" value="Chia Mảng" class="btn btn-secondary">
 		  	</div>
 		</form>
-
+		<br />
 		<?php
 
 			if (isset($_POST['btnCreate'])) {
 				$indexed = $_POST['indexArr'];
-
+				$_SESSION['arrMain'] = array();
+				
 				$get_err = checkErr($indexed);
 				if ($get_err['stt'] == 0) {
-					echo "<br />" .$get_err['message'];
+					echo $get_err['message'];
 					return;
 				}
 
@@ -60,7 +61,7 @@
 				for ($i=0; $i < $indexed; $i++) {
 					$push_rand = mt_rand(0, 1);
 					$length_scope = mt_rand($scope_min, $scope_max);
-					$element_rand = ($push_rand) ? randNumber($length_scope) : randString($length_scope);
+					$element_rand = ($push_rand) ? randNumber($scope_min, $scope_max) : randString($length_scope);
 					array_push($arr_rand, $element_rand);					
 				}
 
@@ -79,25 +80,12 @@
 				return array('INT' => $arr_int, 'STR' => $arr_str);
 			}
 
-			function randNumber($length):int
-			{				
-				//$int_max = str_split(PHP_INT_MAX);
-				$int_max = array_map('intval', str_split(PHP_INT_MAX));
-				//var_dump($int_max[1]);
-				$num_rand = mt_rand(1, $int_max[0]);
-
-				if ($num_rand == $int_max[0] && $length == strlen(PHP_INT_MAX)) {
-					for ($i=1; $i < $length; $i++) {
-						$num_rand .= mt_rand(0, $int_max[$i]);
-					}
-					return $num_rand;
-				}
-
-				while (strlen($num_rand) < $length) {
-					$num_rand .= mt_rand(0, 9);
-				}
-
-				return $num_rand;
+			function randNumber($min, $max):int
+			{
+				$min_scope = pow(10, $min-1);
+        		$max_scope = pow(10, $max) - 1;
+        		$max_scope = $max_scope > PHP_INT_MAX ? PHP_INT_MAX : $max_scope;
+				return mt_rand($min_scope, $max_scope);
 			}
 
 			function randString($length):string
@@ -118,8 +106,8 @@
 				if ($indexed == '') {
 					return array('stt' => 0, 'message' => 'Chưa nhập số phần tử');
 				}
-
-				if (!is_numeric($indexed) || !is_int($indexed)) {
+				
+				if (!is_numeric($indexed) || $indexed - (int)$indexed != 0) {
 					return array('stt' => 0, 'message' => 'Yêu cầu nhập số nguyên');
 				}
 
@@ -129,7 +117,7 @@
 
 				if (floor(($indexed*3)/4) > strlen(PHP_INT_MAX)) {
 					return array('stt' => 0, 'message' => 'Số phần tử phải là số nhỏ hơn ' .ceil(strlen(PHP_INT_MAX)/(3/4) + 1));
-				}				
+				}
 				
 				return array('stt' => 1);
 			}
