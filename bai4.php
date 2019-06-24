@@ -1,7 +1,7 @@
 <?php
     session_start();
-    $_SESSION['products'] = empty($_SESSION['products']) ? createProduct() : $_SESSION['products'];
-    $products = $_SESSION['products'];
+    $products = empty($_SESSION['products']) ? array() : $_SESSION['products'];
+    //$products = $_SESSION['products'] ?? array();
 
     if (isset($_POST['btnCreateProducts'])) {
         $get_error = checkErr($_POST['inputIndexed']);
@@ -28,7 +28,7 @@
 
     if (isset($_POST['btnQuantity'])) {
         $type_quantity = $_POST['btnQuantity'] == SORT_DESC ? SORT_ASC : SORT_DESC;
-        $products = quickSort($products, $type_quantity, 'quantity');        
+        $products = quickSort($products, $type_quantity, 'quantity');
     }
 
     if (isset($_POST['btnOrder'])) {
@@ -62,27 +62,27 @@
             <thead>
                 <tr>            
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?php echo $type_id ?? 4; ?>" name="btnID">ID</button>
+                        <button type="submit" class="btn" value="<?php echo isset($type_id) ? $type_id: 4; ?>" name="btnID">ID</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?php echo $type_name ?? 4; ?>" name="btnName">Name</button>
+                        <button type="submit" class="btn" value="<?php echo isset($type_name) ? $type_name : 4; ?>" name="btnName">Name</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?php echo $type_prince ?? 4; ?>" name="btnPrince">Prince</button>
+                        <button type="submit" class="btn" value="<?php echo isset($type_prince) ? $type_prince : 4; ?>" name="btnPrince">Prince</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?php echo $type_quantity ?? 4; ?>" name="btnQuantity">Quantity</button>
+                        <button type="submit" class="btn" value="<?php echo isset($type_quantity) ? $type_quantity : 4; ?>" name="btnQuantity">Quantity</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?php echo $type_order ?? 4; ?>" name="btnOrder">Order</button>
+                        <button type="submit" class="btn" value="<?php echo isset($type_order) ? $type_order : 4; ?>" name="btnOrder">Order</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?php echo $type_total ?? 4; ?>" name="btnTotal">Total</button>
+                        <button type="submit" class="btn" value="<?php echo isset($type_total) ? $type_total : 4; ?>" name="btnTotal">Total</button>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <?php if(isset($products)) foreach ($products as $product): ?>
+                <?php if(!empty($products)) foreach ($products as $product): ?>
                 <tr>
                     <td scope="row"><?php echo($product['id']) ?></td>
                     <td><?php echo($product['name']) ?></td>
@@ -133,7 +133,7 @@
             for ($i=0; $i<$indexed; $i++) {
                 $prince = mt_rand(1000, 50000);
                 $quantity = mt_rand(1, 100);
-                $value_product = array($i, "Product " .str_pad($i, count($indexed)+1, '0', STR_PAD_LEFT), $prince ,$quantity ,mt_rand(1, 100), $prince*$quantity);
+                $value_product = array($i, "Product " .str_pad($i, strlen($indexed), '0', STR_PAD_LEFT), $prince ,$quantity ,mt_rand(1, 100), $prince*$quantity);
                 $product = array_combine($key_product, $value_product);
                 array_push($list_product, $product);
             }
