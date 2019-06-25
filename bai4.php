@@ -2,7 +2,7 @@
     session_start();
 
     $products = empty($_SESSION['products']) ? array() : $_SESSION['products'];
-    $type_sort = array(
+    $typeSort = array(
                     'id' => SORT_ASC,
                     'name' => SORT_ASC,
                     'id' => SORT_ASC,
@@ -11,46 +11,46 @@
                     'order' => SORT_ASC,
                     'total' => SORT_ASC
                 );
-    $message_error = '';
+    $messageError = '';
 
     if (isset($_POST['btnCreateProducts'])) {
-        $check_amount = checkInputValue($_POST['inputAmount']);
-        if ($check_amount['status'] === 1) {
+        $checkAmount = checkInputValue($_POST['inputAmount']);
+        if ($checkAmount['status'] === 1) {
             $products = createProduct($_POST['inputAmount']);
             $_SESSION['products'] = $products;
         } else {
-            $message_error = $check_amount['message'];
+            $messageError = $checkAmount['message'];
         }
     }
 
     if (isset($_POST['btnID'])) {
-        $type_sort['id'] = ($_POST['btnID'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $type_sort['id'], 'id');
+        $typeSort['id'] = ($_POST['btnID'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
+        $products = bubbleSort($products, $typeSort['id'], 'id');
     }
 
     if (isset($_POST['btnName'])) {
-        $type_sort['name'] = ($_POST['btnName'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $type_sort['name'], 'name');
+        $typeSort['name'] = ($_POST['btnName'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
+        $products = bubbleSort($products, $typeSort['name'], 'name');
     }
 
     if (isset($_POST['btnPrice'])) {
-        $type_sort['price'] = ($_POST['btnPrice'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $type_sort['price'], 'price');
+        $typeSort['price'] = ($_POST['btnPrice'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
+        $products = bubbleSort($products, $typeSort['price'], 'price');
     }
 
     if (isset($_POST['btnQuantity'])) {
-        $type_sort['quantity'] = ($_POST['btnQuantity'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $type_sort['quantity'], 'quantity');
+        $typeSort['quantity'] = ($_POST['btnQuantity'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
+        $products = bubbleSort($products, $typeSort['quantity'], 'quantity');
     }
 
     if (isset($_POST['btnOrder'])) {
-        $type_sort['order'] = ($_POST['btnOrder'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $type_sort['order'], 'order');
+        $typeSort['order'] = ($_POST['btnOrder'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
+        $products = bubbleSort($products, $typeSort['order'], 'order');
     }
 
     if (isset($_POST['btnTotal'])) {
-        $type_sort['total'] = ($_POST['btnTotal'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $type_sort['total'], 'total');
+        $typeSort['total'] = ($_POST['btnTotal'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
+        $products = bubbleSort($products, $typeSort['total'], 'total');
     }
 
 ?>
@@ -74,22 +74,22 @@
             <thead>
                 <tr>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $type_sort['id']; ?>" name="btnID">ID</button>
+                        <button type="submit" class="btn" value="<?= $typeSort['id']; ?>" name="btnID">ID</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $type_sort['name']; ?>" name="btnName">Name</button>
+                        <button type="submit" class="btn" value="<?= $typeSort['name']; ?>" name="btnName">Name</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $type_sort['price']; ?>" name="btnPrice">Price</button>
+                        <button type="submit" class="btn" value="<?= $typeSort['price']; ?>" name="btnPrice">Price</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $type_sort['quantity']; ?>" name="btnQuantity">Quantity</button>
+                        <button type="submit" class="btn" value="<?= $typeSort['quantity']; ?>" name="btnQuantity">Quantity</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $type_sort['order']; ?>" name="btnOrder">Order</button>
+                        <button type="submit" class="btn" value="<?= $typeSort['order']; ?>" name="btnOrder">Order</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $type_sort['total']; ?>" name="btnTotal">Total</button>
+                        <button type="submit" class="btn" value="<?= $typeSort['total']; ?>" name="btnTotal">Total</button>
                     </th>
                 </tr>
             </thead>
@@ -111,7 +111,7 @@
         <div class="form-inline">
             <input type="number" class="form-control" name="inputAmount">
             <input type="submit" name="btnCreateProducts" value="Tạo mới" class="btn btn-primary" style="margin: auto 5px">
-            <?= $message_error; ?>
+            <?= $messageError; ?>
         </div>
     </form>
     
@@ -119,10 +119,10 @@
 
         /**
          * Sắp xếp Sản phẩm bằng thuật toán nổi bọt
-         * @param  [array] $products  [Mảng chứa tất cả các sản phẩm]
-         * @param  [int] $type        [Kiểu sắp sếp sản phẩm: SORT_ASC, SORT_DESC]
-         * @param  [string] $column   [Tên cột muốn sắp xếp]
-         * @return [array]            [Mảng chứa tất cả các sản phẩm đã sắp xếp]
+         * @param  array   $products   Mảng chứa tất cả các sản phẩm
+         * @param  integer $type       Kiểu sắp sếp sản phẩm: SORT_ASC, SORT_DESC
+         * @param  integer $column     Tên cột muốn sắp xếp
+         * @return array               Mảng chứa tất cả các sản phẩm đã sắp xếp
          */
         function bubbleSort($products, $type, $column):array
         {
@@ -148,10 +148,10 @@
 
         /**
          * Hoán đổi vị trí giữa 2 sản phẩm
-         * @param  [array] $products  [Mảng chứa sản phẩm]
-         * @param  [int] $position1   [Vị trí của sản phẩm 1 trong mảng]
-         * @param  [int] $position2   [Vị trí của sản phẩm 2 trong mảng]
-         * @return [array]            [Mảng chứa sản phẩm đã hoán đổi]
+         * @param  array   $products    Mảng chứa sản phẩm
+         * @param  integer $position1   Vị trí của sản phẩm 1 trong mảng
+         * @param  integer $position2   Vị trí của sản phẩm 2 trong mảng
+         * @return array                Mảng chứa sản phẩm đã hoán đổi
          */
         function swapProduct($products, $position1, $position2):array
         {
@@ -164,12 +164,12 @@
 
         /**
          * Tạo sản phẩm với 5 cột id, name, price, quantity, order.
-         * @param  integer $amount [Số lượng sản phẩm muốn tạo]
-         * @return [array]         [Mảng chứa các sản phẩm mới tạo]
+         * @param  integer $amount  Số lượng sản phẩm muốn tạo
+         * @return array            Mảng chứa các sản phẩm mới tạo
          */
         function createProduct($amount):array
         {
-            $list_product = array();
+            $listProduct = array();
             for ($i=0; $i<$amount; $i++) {
                 $product = array(
                     'id' => $i, 
@@ -178,24 +178,24 @@
                     'quantity' => mt_rand(1, 100),
                     'order' => mt_rand(1, 100)
                 );
-                array_push($list_product, $product);
+                array_push($listProduct, $product);
             }
 
-            return $list_product;
+            return $listProduct;
         }
 
         /**
          * Kiểm tra giá trị nhập vào
-         * @param  [string] $input_value [Tên giá trị cần kiểm tra]
-         * @return [array]               [Mảng trả về key status, value message nếu có lỗi]
+         * @param  string $inputValue  Tên giá trị cần kiểm tra
+         * @return array               Mảng trả về key status, value message nếu có lỗi
          */
-        function checkInputValue($input_value):array
+        function checkInputValue($inputValue):array
         {
-            if ($input_value == '') {
+            if ($inputValue == '') {
                 return array('status' => 0, 'message' => 'Chưa nhập số lượng sản phẩm');
             }
             
-            if (!is_numeric($input_value) || $input_value - (int)$input_value != 0 || $input_value < 0) {
+            if (!is_numeric($inputValue) || $inputValue - (int)$inputValue != 0 || $inputValue < 0) {
                 return array('status' => 0, 'message' => 'Yêu cầu nhập số nguyên dương lớn hơn 0');
             }
 
