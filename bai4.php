@@ -2,15 +2,8 @@
     session_start();
 
     $products = empty($_SESSION['products']) ? array() : $_SESSION['products'];
-    $typeSort = array(
-                    'id' => SORT_ASC,
-                    'name' => SORT_ASC,
-                    'id' => SORT_ASC,
-                    'price' => SORT_ASC,
-                    'quantity' => SORT_ASC,
-                    'order' => SORT_ASC,
-                    'total' => SORT_ASC
-                );
+    $_SESSION['sort'] = empty($_SESSION['sort']) ? array('id' => SORT_DESC) : $_SESSION['sort'];
+
     $messageError = '';
 
     if (isset($_POST['btnCreateProducts'])) {
@@ -24,33 +17,27 @@
     }
 
     if (isset($_POST['btnID'])) {
-        $typeSort['id'] = ($_POST['btnID'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $typeSort['id'], 'id');
+        $products = bubbleSort($products, 'id');
     }
 
     if (isset($_POST['btnName'])) {
-        $typeSort['name'] = ($_POST['btnName'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $typeSort['name'], 'name');
+        $products = bubbleSort($products, 'name');
     }
 
     if (isset($_POST['btnPrice'])) {
-        $typeSort['price'] = ($_POST['btnPrice'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $typeSort['price'], 'price');
+        $products = bubbleSort($products, 'price');
     }
 
     if (isset($_POST['btnQuantity'])) {
-        $typeSort['quantity'] = ($_POST['btnQuantity'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $typeSort['quantity'], 'quantity');
+        $products = bubbleSort($products, 'quantity');
     }
 
     if (isset($_POST['btnOrder'])) {
-        $typeSort['order'] = ($_POST['btnOrder'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $typeSort['order'], 'order');
+        $products = bubbleSort($products, 'order');
     }
 
     if (isset($_POST['btnTotal'])) {
-        $typeSort['total'] = ($_POST['btnTotal'] == SORT_DESC) ? SORT_ASC : SORT_DESC;
-        $products = bubbleSort($products, $typeSort['total'], 'total');
+        $products = bubbleSort($products, 'total');
     }
 
 ?>
@@ -74,22 +61,22 @@
             <thead>
                 <tr>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $typeSort['id']; ?>" name="btnID">ID</button>
+                        <button type="submit" class="btn" name="btnID">ID</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $typeSort['name']; ?>" name="btnName">Name</button>
+                        <button type="submit" class="btn" name="btnName">Name</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $typeSort['price']; ?>" name="btnPrice">Price</button>
+                        <button type="submit" class="btn" name="btnPrice">Price</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $typeSort['quantity']; ?>" name="btnQuantity">Quantity</button>
+                        <button type="submit" class="btn" name="btnQuantity">Quantity</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $typeSort['order']; ?>" name="btnOrder">Order</button>
+                        <button type="submit" class="btn" name="btnOrder">Order</button>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" value="<?= $typeSort['total']; ?>" name="btnTotal">Total</button>
+                        <button type="submit" class="btn" name="btnTotal">Total</button>
                     </th>
                 </tr>
             </thead>
@@ -109,7 +96,7 @@
             </tbody>
         </table>
         <div class="form-inline">
-            <input type="number" class="form-control" name="inputAmount">
+            <input type="text" class="form-control" name="inputAmount">
             <input type="submit" name="btnCreateProducts" value="Tạo mới" class="btn btn-primary" style="margin: auto 5px">
             <?= $messageError; ?>
         </div>
@@ -120,12 +107,14 @@
         /**
          * Sắp xếp Sản phẩm bằng thuật toán nổi bọt
          * @param  array   $products   Mảng chứa tất cả các sản phẩm
-         * @param  integer $type       Kiểu sắp sếp sản phẩm: SORT_ASC, SORT_DESC
          * @param  integer $column     Tên cột muốn sắp xếp
          * @return array               Mảng chứa tất cả các sản phẩm đã sắp xếp
          */
-        function bubbleSort($products, $type, $column):array
-        {
+        function bubbleSort($products, $column):array
+        {   
+            $type = array_key_exists($column, $_SESSION['sort']) ? (($_SESSION['sort'][$column] == SORT_DESC) ? SORT_ASC : SORT_DESC): SORT_DESC;
+            $_SESSION['sort'] = array($column => $type);
+
             $element = count($products);
             for ($i=0; $i < $element; $i++) {
                 for ($j=$i+1; $j < $element; $j++) {
@@ -196,7 +185,7 @@
                 return array('status' => 0, 'message' => 'Chưa nhập số lượng sản phẩm');
             }
             
-            if (!is_numeric($inputValue) || $inputValue - (int)$inputValue != 0 || $inputValue < 0) {
+            if (filter_var($inputValue, FILTER_VALIDATE_INT) === false || $inputValue < 0) {
                 return array('status' => 0, 'message' => 'Yêu cầu nhập số nguyên dương lớn hơn 0');
             }
 
