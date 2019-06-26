@@ -101,8 +101,8 @@
                         <td><?php echo($product['name']) ?></td>
                         <td><?php echo($product['price']) ?></td>
                         <td><?php echo($product['quantity']) ?></td>
-                        <td><?php echo($product['order']) ?></td>  
-                        <td><?php echo($product['price']*$product['order']) ?></td>          
+                        <td><?php echo($product['order']) ?></td>
+                        <td><?php echo($product['price']*$product['quantity']) ?></td>          
                     </tr>
                     <?php endforeach ?>
                 <?php endif ?>
@@ -126,18 +126,19 @@
          */
         function bubbleSort($products, $type, $column):array
         {
-            for ($i=0; $i < count($products); $i++) {
-                for ($j=0; $j < count($products)-1-$i; $j++) {
-                    $product1 = $column == 'total' ? $products[$j]['price']*$products[$j]['order'] : $products[$j][$column];
-                    $product2 = $column == 'total' ? $products[$j+1]['price']*$products[$j+1]['order'] : $products[$j+1][$column] ;
+            $element = count($products);
+            for ($i=0; $i < $element; $i++) {
+                for ($j=$i+1; $j < $element; $j++) {
+                    $product1 = $column == 'total' ? $products[$i]['price']*$products[$i]['quantity'] : $products[$i][$column];
+                    $product2 = $column == 'total' ? $products[$j]['price']*$products[$j]['quantity'] : $products[$j][$column];
 
                     if ($product1 > $product2 && $type == SORT_ASC) {
-                        $products = swapProduct($products, $j, $j+1);
+                        $products = swapProduct($products, $i, $j);
                         continue;
                     }
 
                     if ($product1 < $product2 && $type == SORT_DESC) {
-                        $products = swapProduct($products, $j, $j+1);
+                        $products = swapProduct($products, $i, $j);
                         continue;
                     }
                 }
