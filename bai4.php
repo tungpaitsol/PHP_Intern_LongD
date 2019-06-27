@@ -13,12 +13,10 @@
             $messageError = $checkAmount['message'];
         }
     }
-
+    
     $sortOrder = SORT_ASC;
-    if (isset($_POST['sort']) && isset($_POST['order'])) {
-        if (!isset($_SESSION['sort'])) {
-            $_SESSION['sort'] = array($_POST['order'] => $_POST['sort']);
-        }
+    if (isset($_POST['sort']) && isset($_POST['order'])) {        
+        $_SESSION['sort'] = array($_POST['order'] => $_POST['sort']);  
 
         if (array_key_exists($_POST['order'], $_SESSION['sort'])) {
             $sortOrder = $_POST['sort'] == SORT_ASC ? SORT_DESC : SORT_ASC;
@@ -27,7 +25,6 @@
         }
 
         $products = bubbleSort($products, $_POST['order'], $sortOrder);
-        $_SESSION['sort'] = array($_POST['order'] => $_POST['sort']);
     }
 ?>
 
