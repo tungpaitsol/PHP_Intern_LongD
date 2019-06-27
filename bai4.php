@@ -15,19 +15,19 @@
     }
 
     $sortOrder = SORT_ASC;
-    if (isset($_GET['order']) && isset($_GET['sort'])) {
+    if (isset($_POST['sort']) && isset($_POST['order'])) {
         if (!isset($_SESSION['sort'])) {
-            $_SESSION['sort'] = array($_GET['order'] => $_GET['sort']);
+            $_SESSION['sort'] = array($_POST['order'] => $_POST['sort']);
         }
 
-        if (array_key_exists($_GET['order'], $_SESSION['sort'])) {
-            $sortOrder = $_GET['sort'] == SORT_ASC ? SORT_DESC : SORT_ASC;
+        if (array_key_exists($_POST['order'], $_SESSION['sort'])) {
+            $sortOrder = $_POST['sort'] == SORT_ASC ? SORT_DESC : SORT_ASC;
         } else {
             $sortOrder = SORT_DESC;
         }
 
-        $products = bubbleSort($products, $_GET['order'], $sortOrder);
-        $_SESSION['sort'] = array($_GET['order'] => $_GET['sort']);
+        $products = bubbleSort($products, $_POST['order'], $sortOrder);
+        $_SESSION['sort'] = array($_POST['order'] => $_POST['sort']);
     }
 ?>
 
@@ -44,27 +44,29 @@
     </style>
 </head>
 <body>
-<div class="container" style="margin: 50px auto;width: 70%">    
+<div class="container" style="margin: 50px auto;width: 70%">
+    <form action="" method="POST">
     <table class="table table-hover table-striped table-sm table-bordered">
         <thead>
                 <tr>
+                    <input type="hidden" name="sort" value="<?= $sortOrder ?>">
                     <th scope="col">
-                        <a href="?order=id&sort=<?= $sortOrder ?>" class="btn" name="id">ID</a>
+                        <button type="submit" class="btn" value="id" name="order">ID</button>
                     </th>
                     <th scope="col">
-                        <a href="?order=name&sort=<?= $sortOrder ?>" class="btn" name="name">Name</a>
+                        <button type="submit" class="btn" value="name" name="order">Name</button>
                     </th>
                     <th scope="col">
-                        <a href="?order=price&sort=<?= $sortOrder ?>" class="btn" name="price">Price</a>
+                        <button type="submit" class="btn" value="price" name="order">Price</button>
                     </th>
                     <th scope="col">
-                        <a href="?order=quantity&sort=<?= $sortOrder ?>" class="btn" name="quantity">Quantity</a>
+                        <button type="submit" class="btn" value="quantity" name="order">Quantity</button>
                     </th>
                     <th scope="col">
-                        <a href="?order=order&sort=<?= $sortOrder ?>" class="btn" name="order">Order</a>
+                        <button type="submit" class="btn" value="order" name="order">Order</button>
                     </th>
                     <th scope="col">
-                        <a href="?order=total&sort=<?= $sortOrder ?>" class="btn" name="total">Total</a>
+                        <button type="submit" class="btn" value="total" name="order">Total</button>
                     </th>
                 </tr>
         </thead>
@@ -83,13 +85,12 @@
             <?php endif ?>
         </tbody>
     </table>
-    <form action="" method="POST">
-        <div class="form-inline">
-            <input type="text" class="form-control" name="inputAmount">
-            <input type="submit" name="btnCreateProducts" value="Tạo mới" class="btn btn-primary" style="margin: auto 5px">
-            <?= $messageError; ?>
-        </div>
-    </form>
+    <div class="form-inline">
+        <input type="text" class="form-control" name="inputAmount">
+        <input type="submit" name="btnCreateProducts" value="Tạo mới" class="btn btn-primary" style="margin: auto 5px">
+        <?= $messageError; ?>
+    </div>
+</form>
     
     <?php
 
