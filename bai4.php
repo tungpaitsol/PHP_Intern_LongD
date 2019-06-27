@@ -1,9 +1,7 @@
 <?php
-    session_start();
+    session_start();    
 
     $products = empty($_SESSION['products']) ? array() : $_SESSION['products'];
-    $_SESSION['sort'] = empty($_SESSION['sort']) ? array('id' => SORT_DESC) : $_SESSION['sort'];
-
     $messageError = '';
 
     if (isset($_POST['btnCreateProducts'])) {
@@ -16,30 +14,21 @@
         }
     }
 
-    if (isset($_POST['btnID'])) {
-        $products = bubbleSort($products, 'id');
-    }
+    $sortOrder = SORT_ASC;
+    if (isset($_GET['order']) && isset($_GET['sort'])) {
+        if (!isset($_SESSION['sort'])) {
+            $_SESSION['sort'] = array($_GET['order'] => $_GET['sort']);
+        }
 
-    if (isset($_POST['btnName'])) {
-        $products = bubbleSort($products, 'name');
-    }
+        if (array_key_exists($_GET['order'], $_SESSION['sort'])) {
+            $sortOrder = $_GET['sort'] == SORT_ASC ? SORT_DESC : SORT_ASC;
+        } else {
+            $sortOrder = SORT_DESC;
+        }
 
-    if (isset($_POST['btnPrice'])) {
-        $products = bubbleSort($products, 'price');
+        $products = bubbleSort($products, $_GET['order'], $sortOrder);
+        $_SESSION['sort'] = array($_GET['order'] => $_GET['sort']);
     }
-
-    if (isset($_POST['btnQuantity'])) {
-        $products = bubbleSort($products, 'quantity');
-    }
-
-    if (isset($_POST['btnOrder'])) {
-        $products = bubbleSort($products, 'order');
-    }
-
-    if (isset($_POST['btnTotal'])) {
-        $products = bubbleSort($products, 'total');
-    }
-
 ?>
 
 <!DOCTYPE html>
@@ -55,46 +44,46 @@
     </style>
 </head>
 <body>
-<div class="container" style="margin: 50px auto;width: 70%">
-    <form action="" method="POST">
-        <table class="table table-hover table-striped table-sm table-bordered">
-            <thead>
+<div class="container" style="margin: 50px auto;width: 70%">    
+    <table class="table table-hover table-striped table-sm table-bordered">
+        <thead>
                 <tr>
                     <th scope="col">
-                        <button type="submit" class="btn" name="btnID">ID</button>
+                        <a href="?order=id&sort=<?= $sortOrder ?>" class="btn" name="id">ID</a>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" name="btnName">Name</button>
+                        <a href="?order=name&sort=<?= $sortOrder ?>" class="btn" name="name">Name</a>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" name="btnPrice">Price</button>
+                        <a href="?order=price&sort=<?= $sortOrder ?>" class="btn" name="price">Price</a>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" name="btnQuantity">Quantity</button>
+                        <a href="?order=quantity&sort=<?= $sortOrder ?>" class="btn" name="quantity">Quantity</a>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" name="btnOrder">Order</button>
+                        <a href="?order=order&sort=<?= $sortOrder ?>" class="btn" name="order">Order</a>
                     </th>
                     <th scope="col">
-                        <button type="submit" class="btn" name="btnTotal">Total</button>
+                        <a href="?order=total&sort=<?= $sortOrder ?>" class="btn" name="total">Total</a>
                     </th>
                 </tr>
-            </thead>
-            <tbody>
-                <?php if(!empty($products)): ?> 
-                    <?php foreach ($products as $product): ?>
-                    <tr>
-                        <td scope="row"><?php echo($product['id']) ?></td>
-                        <td><?php echo($product['name']) ?></td>
-                        <td><?php echo($product['price']) ?></td>
-                        <td><?php echo($product['quantity']) ?></td>
-                        <td><?php echo($product['order']) ?></td>
-                        <td><?php echo($product['price']*$product['quantity']) ?></td>          
-                    </tr>
-                    <?php endforeach ?>
-                <?php endif ?>
-            </tbody>
-        </table>
+        </thead>
+        <tbody>
+            <?php if(!empty($products)): ?> 
+                <?php foreach ($products as $product): ?>
+                <tr>
+                    <td scope="row"><?php echo($product['id']) ?></td>
+                    <td><?php echo($product['name']) ?></td>
+                    <td><?php echo($product['price']) ?></td>
+                    <td><?php echo($product['quantity']) ?></td>
+                    <td><?php echo($product['order']) ?></td>
+                    <td><?php echo($product['price']*$product['quantity']) ?></td>          
+                </tr>
+                <?php endforeach ?>
+            <?php endif ?>
+        </tbody>
+    </table>
+    <form action="" method="POST">
         <div class="form-inline">
             <input type="text" class="form-control" name="inputAmount">
             <input type="submit" name="btnCreateProducts" value="Tạo mới" class="btn btn-primary" style="margin: auto 5px">
@@ -107,14 +96,12 @@
         /**
          * Sắp xếp Sản phẩm bằng thuật toán nổi bọt
          * @param  array   $products   Mảng chứa tất cả các sản phẩm
+         * @param  integer $type       Tên kiểu sắp xếp: SORT_ASC, SORT_DESC
          * @param  integer $column     Tên cột muốn sắp xếp
          * @return array               Mảng chứa tất cả các sản phẩm đã sắp xếp
          */
-        function bubbleSort($products, $column):array
-        {   
-            $type = array_key_exists($column, $_SESSION['sort']) ? (($_SESSION['sort'][$column] == SORT_DESC) ? SORT_ASC : SORT_DESC): SORT_DESC;
-            $_SESSION['sort'] = array($column => $type);
-
+        function bubbleSort($products, $column, $type):array
+        {
             $element = count($products);
             for ($i=0; $i < $element; $i++) {
                 for ($j=$i+1; $j < $element; $j++) {
