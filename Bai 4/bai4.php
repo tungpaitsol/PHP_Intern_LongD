@@ -15,16 +15,16 @@
     }
     
     $sortOrder = SORT_ASC;
-    if (isset($_POST['sort']) && isset($_POST['order'])) {        
-        $_SESSION['sort'] = array($_POST['order'] => $_POST['sort']);  
+    if (isset($_POST['sort']) && isset($_POST['order'])) { 
 
-        if (array_key_exists($_POST['order'], $_SESSION['sort'])) {
+        if (isset($_SESSION['sort']) && array_key_exists($_POST['order'], $_SESSION['sort'])) {
             $sortOrder = $_POST['sort'] == SORT_ASC ? SORT_DESC : SORT_ASC;
         } else {
             $sortOrder = SORT_DESC;
         }
 
-        $products = bubbleSort($products, $_POST['order'], $sortOrder);
+        $products = bubbleSort($products, $_POST['order'], $sortOrder);        
+        $_SESSION['sort'] = array($_POST['order'] => $sortOrder);
     }
 ?>
 
