@@ -15,7 +15,7 @@
     }
     
     $sortOrder = SORT_ASC;
-    if (isset($_POST['sort']) && isset($_POST['order'])) { 
+    if (isset($_POST['sort']) && isset($_POST['order'])) {
 
         if (isset($_SESSION['sort']) && array_key_exists($_POST['order'], $_SESSION['sort'])) {
             $sortOrder = $_POST['sort'] == SORT_ASC ? SORT_DESC : SORT_ASC;
@@ -23,8 +23,17 @@
             $sortOrder = SORT_DESC;
         }
 
-        $products = bubbleSort($products, $_POST['order'], $sortOrder);        
+        $products = bubbleSort($products, $_POST['order'], $sortOrder);
         $_SESSION['sort'] = array($_POST['order'] => $sortOrder);
+    }
+
+    if (isset($_POST['btnSaveProducts'])) {
+        $productsEdited = saveOrderProducts($products);
+        $_SESSION['products'] = $productsEdited['products'];
+        $messageError = implode('<br />', $productsEdited['message']);
+        $sortOrder = SORT_DESC;
+        $products = bubbleSort($productsEdited['products'], 'order', $sortOrder);
+        $_SESSION['sort'] = array('order' => $sortOrder);
     }
 ?>
 
@@ -75,8 +84,10 @@
                     <td><?php echo($product['name']) ?></td>
                     <td><?php echo($product['price']) ?></td>
                     <td><?php echo($product['quantity']) ?></td>
-                    <td><?php echo($product['order']) ?></td>
-                    <td><?php echo($product['price']*$product['quantity']) ?></td>          
+                    <td width="200px">
+                        <input type="number" class="form-control" name="<?php echo('inputOrder'.$product['id']) ?>" value="<?php echo($product['order']) ?>">
+                    </td>
+                    <td><?php echo($product['price']*$product['quantity']) ?></td>
                 </tr>
                 <?php endforeach ?>
             <?php endif ?>
@@ -85,11 +96,37 @@
     <div class="form-inline">
         <input type="text" class="form-control" name="inputAmount">
         <input type="submit" name="btnCreateProducts" value="Tạo mới" class="btn btn-primary" style="margin: auto 5px">
+        <input type="submit" name="btnSaveProducts" value="Lưu" class="btn btn-success"> 
         <?= $messageError; ?>
     </div>
 </form>
     
     <?php
+
+        /**
+         * Lưu sản phẩm sau khi sửa đổi order
+         * @param  array $products   Mảng chứa tất cả các sản phẩm
+         * @return array             Mảng chứa tất cả các sản phẩm đã sửa và lỗi nếu có
+         */
+        function saveOrderProducts($products):array
+        {
+            $messageError = array();
+            for ($i=0; $i < count($products); $i++) { 
+                $valueOrder = $_POST['inputOrder'.$products[$i]['id']];
+                $checkValueOrder = checkInputValue($valueOrder);
+                if ($checkValueOrder['status'] === 0) {
+                    $messageError += array($products[$i]['id'] => $products[$i]['name']." ".$checkValueOrder['message']);
+                    continue;
+                }
+
+                if ($products[$i]['order'] == $valueOrder) continue;
+
+                $products[$i]['order'] = $valueOrder;
+                $products[$i]['total'] = $valueOrder*$products[$i]['price'];
+            }
+
+            return array('products' => $products, 'message' => $messageError);
+        }
 
         /**
          * Sắp xếp Sản phẩm bằng thuật toán nổi bọt
@@ -112,6 +149,11 @@
                     }
 
                     if ($product1 < $product2 && $type == SORT_DESC) {
+                        $products = swapProduct($products, $i, $j);
+                        continue;
+                    }
+
+                    if ($product1 == $product2 && $products[$i]['id'] > $products[$j]['id']) {
                         $products = swapProduct($products, $i, $j);
                         continue;
                     }
