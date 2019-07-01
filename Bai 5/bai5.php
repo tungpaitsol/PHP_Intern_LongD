@@ -122,10 +122,6 @@
                 if ($products[$i]['order'] == $valueOrder) continue;
 
                 $products[$i]['order'] = $valueOrder;
-<<<<<<< HEAD
-=======
-                $products[$i]['total'] = $valueOrder*$products[$i]['price'];
->>>>>>> 246069ca3a92bfcfad40251e29a144be7b617e4a
             }
 
             return array('products' => $products, 'message' => $messageError);
