@@ -13,7 +13,8 @@
             $messageError = $checkAmount['message'];
         }
     }
-    
+    //echo("<pre>");
+    //echo($_POST['checkBoxUpdate8']);
     $sortOrder = SORT_ASC;
     if (isset($_POST['sort']) && isset($_POST['order'])) {
 
@@ -55,6 +56,9 @@
     <table class="table table-hover table-striped table-sm table-bordered">
         <thead>
                 <tr>
+                    <th scope="col">
+                        
+                    </th>
                     <input type="hidden" name="sort" value="<?= $sortOrder ?>">
                     <th scope="col">
                         <button type="submit" class="btn" value="id" name="order">ID</button>
@@ -80,6 +84,12 @@
             <?php if(!empty($products)): ?> 
                 <?php foreach ($products as $product): ?>
                 <tr>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="<?= ('checkBoxUpdate'.$product['id']) ?>" class="custom-control-input" id="<?= ('cbUpdate'.$product['id']) ?>">
+                            <label class="custom-control-label" for="<?= ('cbUpdate'.$product['id']) ?>"></label>
+                        </div>
+                    </td>
                     <td scope="row"><?php echo($product['id']) ?></td>
                     <td><?php echo($product['name']) ?></td>
                     <td><?php echo($product['price']) ?></td>
@@ -100,7 +110,7 @@
         <?= $messageError; ?>
     </div>
 </form>
-    
+
     <?php
 
         /**
@@ -112,6 +122,10 @@
         {
             $messageError = array();
             for ($i=0; $i < count($products); $i++) { 
+                if (!isset($_POST['checkBoxUpdate'.$products[$i]['id']])) {
+                    continue;
+                }
+
                 $valueOrder = $_POST['inputOrder'.$products[$i]['id']];
                 $checkValueOrder = checkInputValue($valueOrder);
                 if ($checkValueOrder['status'] === 0) {
