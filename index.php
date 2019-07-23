@@ -1,8 +1,10 @@
 <?php
     require_once 'BLL.php';
+    setlocale(LC_ALL, 'vi_VN');
     $bll = new ManagerBLL();
     $billDetail = $bll->getBillDetailByBillId(1);
     $salaryMember = $bll->getSalaryMemberOfMonth(2019,7);
+
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +26,6 @@
         .bill-detail,
         .salary-detail {
             border: black solid 2px;
-            width: 500px;
             margin: 15px auto;
             /*padding-left: 20px;*/
             /*padding-right: 20px;*/
@@ -68,7 +69,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="salary-detail">
+    <div class="salary-detail" style="width: 500px">
         <div class="header">
             <div class="row">
                 <div class="col-sm title">LƯƠNG NHÂN VIÊN</div>
@@ -76,15 +77,16 @@
         </div>
         <div class="salary-member">
             <?php foreach ($salaryMember as $salary): ?>
+
             <div class="row">
                 <div class="col-sm-8 title"><?= $salary->fullname ?></div>
-                <div class="col-sm-4 title"><?= $salary->salary ?></div>
+                <div class="col-sm-4 title"><?= $bll->moneyFormat($salary->salary) ?></div>
             </div>
             <?php endforeach; ?>
         </div>
     </div>
 
-    <div class="bill-detail">
+    <div class="bill-detail" style="width: 700px">
         <div class="header">
             <div class="row">
                 <div class="col-sm title">HOÁ ĐƠN THANH HOÁ</div>
@@ -115,9 +117,9 @@
                 <div class="row">
                     <div class="col-sm-4"><?= $food->name ?></div>
                     <div class="col-sm-2"><?= $food->quantity ?></div>
-                    <div class="col-sm-2"><?= $food->price ?></div>
+                    <div class="col-sm-2"><?= $bll->moneyFormat($food->price) ?></div>
                     <div class="col-sm-1"><?= $food->tax ?></div>
-                    <div class="col-sm-3"><?= $food->totalmoney ?></div>
+                    <div class="col-sm-3"><?= $bll->moneyFormat($food->totalmoney) ?></div>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -129,13 +131,13 @@
         <?php foreach($billDetail->billstaff as $staff) : ?>
             <div class="row">
                 <div class="col-sm-8"><?= $staff->fullname ?></div>
-                <div class="col-sm-4"><?= $staff->servicemoney ?></div>
+                <div class="col-sm-4"><?= $bll->moneyFormat($staff->servicemoney) ?></div>
             </div>
         <?php endforeach; ?>
         <div class="money">
             <div class="row">
                 <div class="col-sm-8">Sub-total</div>
-                <div class="col-sm-4"><?= $billDetail->submoney ?></div>
+                <div class="col-sm-4"><?= $bll->moneyFormat($billDetail->submoney) ?></div>
             </div>
             <div class="row">
                 <div class="col-sm-8">Tax(%)</div>
@@ -143,14 +145,13 @@
             </div>
             <div class="row">
                 <div class="col-sm-8">Discount</div>
-                <div class="col-sm-4">-<?= $billDetail->discount ?></div>
+                <div class="col-sm-4">-<?= $bll->moneyFormat($billDetail->discount) ?></div>
             </div>
             <div class="row">
                 <div class="col-sm-8">Total</div>
-                <div class="col-sm-4"><?= $billDetail->totalmoney ?></div>
+                <div class="col-sm-4"><?= $bll->moneyFormat($billDetail->totalmoney) ?></div>
             </div>
         </div>
-
     </div>
 </div>
 </body>

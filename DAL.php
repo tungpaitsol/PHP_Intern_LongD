@@ -3,7 +3,8 @@
 
     class ManagerDAL extends Database
     {
-        public function getBillById($billId) {
+        public function getBillById($billId)
+        {
             $query='SELECT b.id             id,
                            b.table_id       tableid,
                            b.date_check_in  datecheckin,
@@ -18,7 +19,8 @@
             return $this->loadRow([$billId]);
         }
 
-        public function setTotalMoneyOfBillByBillId($billId, $totalMoney) {
+        public function setTotalMoneyOfBillByBillId($billId, $totalMoney)
+        {
             $query='UPDATE bill
                       SET total_money=?
                       WHERE id=?';
@@ -47,24 +49,13 @@
             return $this->loadAllRows([$billId]);
         }
 
-        public function getMinTimeAndMaxTimeByBillId($billId)
-        {
-            $query='SELECT UNIX_TIMESTAMP(MIN(bs.start_datetime)) mintime,
-                           UNIX_TIMESTAMP(MAX(bs.end_datetime))   maxtime
-                    FROM bill_staff_info bs
-                    WHERE bs.bill_id = ?';
-
-            $this->setQuery($query);
-            return $this->loadRow([$billId]);
-        }
-
         public function getListBillStaffInfoByBillId($billId)
         {
             $query='SELECT bs.id                             id,
                            bs.member_id                      memberid,
                            bs.bill_id                        billid,
-                           UNIX_TIMESTAMP(bs.start_datetime) startdatetime,
-                           UNIX_TIMESTAMP(bs.end_datetime)   enddatetime,
+                           bs.start_datetime startdatetime,
+                           bs.end_datetime   enddatetime,
                            bs.member_type                    membertype,
                            bs.service_money                  servicemoney
                     FROM bill_staff_info bs
@@ -93,10 +84,11 @@
             return $this->loadAllRows([$billId]);
         }
 
-        public function getSalaryMemberOfMonth($year, $month) {
+        public function getSalaryMemberOfMonth($year, $month)
+        {
             $query='SELECT bs.member_id                                              memberid,
                            m.full_name                                               fullname,
-                           DATE_FORMAT(bs.start_datetime, \'%m/%Y\')                   date,
+                           DATE_FORMAT(bs.start_datetime, \'%m/%Y\')                 date,
                            SUM(bs.service_money * 40 / 100) +
                            SUM(b.total_money * IF(bs.member_type = 1, 1.5, 1) / 100) salary
                     FROM bill_staff_info bs

@@ -8,6 +8,18 @@
             array(80000, 60000, 40000)
         );
 
+        public function moneyFormat($money, $locale = 'vi') {
+            setlocale(LC_MONETARY, $locale);
+            $money = number_format(
+                $money,
+                0,
+                localeconv()['mon_decimal_point'],
+                localeconv()['mon_thousands_sep']
+            );
+
+            return $money. ' ' . localeconv()['int_curr_symbol'];
+        }
+
         private function getServiceMoneyStaffOfHour($numberStaff, $numberHour)
         {
             $maxStaff=count($this->serviceMoney);
@@ -20,14 +32,18 @@
         public function calServiceMoneyStaffByBillId($billId)
         {
             $billStaffs=$this->getListBillStaffInfoByBillId($billId);
-            $timeWork=$this->getMinTimeAndMaxTimeByBillId($billId);
+            $bill=$this->getBillById($billId);
+            $timeCheckIn = ceil(strtotime($bill->datecheckin)/3600);
+            $timeCheckOut = ceil(strtotime($bill->datecheckout)/3600);
             $numberHour=0;
             $listStaffInTime=[];
 
-            for ($i=$timeWork->mintime; $i <= $timeWork->maxtime; $i+=3600) {
+            for ($i = $timeCheckIn; $i <= $timeCheckOut; $i++) {
                 $staffsInTime=[];
                 foreach ($billStaffs as $billStaff) {
-                    if ($billStaff->startdatetime > $i + 3600 || $billStaff->enddatetime < $i) continue;
+                    $startDateTime = ceil(strtotime($billStaff->startdatetime)/3600);
+                    $endDateTime = ceil(strtotime($billStaff->enddatetime)/3600);
+                    if ($startDateTime > $i || $endDateTime < $i) continue;
 
                     $staffsInTime[$billStaff->id]=$billStaff->id;
                 }
