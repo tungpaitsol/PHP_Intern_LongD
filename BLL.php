@@ -41,9 +41,10 @@
             for ($i = $timeCheckIn; $i <= $timeCheckOut; $i++) {
                 $staffsInTime=[];
                 foreach ($billStaffs as $billStaff) {
-                    $startDateTime = ceil(strtotime($billStaff->startdatetime)/3600);
-                    $endDateTime = ceil(strtotime($billStaff->enddatetime)/3600);
-                    if ($startDateTime > $i || $endDateTime < $i) continue;
+                    $startDateTime = strtotime($billStaff->startdatetime)/3600;
+                    $endDateTime = (strtotime($billStaff->enddatetime)/3600);
+                    $endDateTime = $endDateTime - $startDateTime < 1 ? floor($endDateTime) : ceil($endDateTime);
+                    if (ceil($startDateTime) > $i || $endDateTime < $i) continue;
 
                     $staffsInTime[$billStaff->id]=$billStaff->id;
                 }
